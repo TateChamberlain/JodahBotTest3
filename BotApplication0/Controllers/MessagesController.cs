@@ -38,14 +38,14 @@ namespace BotApplication0
                 }
                 else
                 {
-                    //try
-                    //{
-                    //    replystring = Class2.GetDBLString();
-                    //}
-                    //catch (Exception e)
-                    //{
-                    //    replystring = "Oh no! There's a problem with Synergy! " + e.Message;
-                    //}
+                    try
+                    {
+                        replystring = Class2.GetDBLString();
+                    }
+                    catch (Exception e)
+                    {
+                        replystring = "Oh no! There's a problem with Synergy! " + e.Message;
+                    }
                 }
 
                 reply = activity.CreateReply(replystring);

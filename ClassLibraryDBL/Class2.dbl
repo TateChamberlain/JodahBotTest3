@@ -14,13 +14,12 @@ namespace ClassLibraryDBL
 				pres_rec	,pres_struct
 				dat_post	,a100
 				dat_len		,i4
+				filech		,i4
 		proc
 			;mreturn "Hello from Synergy!"
 			pres_rec.firstname = "Jodah"
 			pres_rec.lastname = "Bot"
-			xcall setlog("DAT", "~\Data", dat_len)
-			if (dat_len == 1) then xcall getlog("DAT", dat_post, dat_len)
-			else dat_post = "<Could not set DAT>"
+			xcall getlog("DAT", dat_post, dat_len)
 			returnvalue = "My name is " + %atrim(pres_rec.firstname) + %atrim(pres_rec.lastname) + 
 			&				". The data is in " + %atrim(dat_post) + "."
 			;throw new FileInUseException()
