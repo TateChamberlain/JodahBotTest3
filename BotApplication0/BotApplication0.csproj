@@ -128,6 +128,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Content Include="Data\EVENTS.IS1" />
+    <Content Include="Data\EVENTS.ISM" />
+    <Content Include="Data\FUNFACTS.IS1" />
+    <Content Include="Data\FUNFACTS.ISM" />
+    <Content Include="Data\JUNCTION.IS1" />
+    <Content Include="Data\JUNCTION.ISM" />
+    <Content Include="Data\PRESENTERS.IS1" />
+    <Content Include="Data\PRESENTERS.ISM" />
     <None Include="Properties\PublishProfiles\JodahBotTest4 - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

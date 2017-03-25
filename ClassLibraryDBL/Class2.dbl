@@ -17,11 +17,15 @@ namespace ClassLibraryDBL
 				filech		,i4
 		proc
 			;mreturn "Hello from Synergy!"
-			pres_rec.firstname = "Jodah"
-			pres_rec.lastname = "Bot"
-			xcall getlog("DAT", dat_post, dat_len)
-			returnvalue = "My name is " + %atrim(pres_rec.firstname) + %atrim(pres_rec.lastname) + 
-			&				". The data is in " + %atrim(dat_post) + "."
+;			pres_rec.firstname = "Jodah"
+;			pres_rec.lastname = "Bot"
+;			xcall getlog("DAT", dat_post, dat_len)
+;			returnvalue = "The name is " + %atrim(pres_rec.firstname) + %atrim(pres_rec.lastname) + 
+;			&				". The data is in " + %atrim(dat_post) + "."
+			open(filech,"I:I","DAT:PRESENTERS.ISM")
+			reads(filech,pres_rec)
+			close filech
+			returnvalue = "There is a presented named " + %atrim(pres_rec.firstname) + %atrim(pres_rec.lastname)
 			;throw new FileInUseException()
 			mreturn %atrim(returnvalue)
 		end
