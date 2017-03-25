@@ -31,25 +31,25 @@ namespace BotApplication0
                 Activity reply = activity.CreateReply("Hello! You sent '" + activity.Text + "'.");
                 await connector.Conversations.ReplyToActivityAsync(reply);
 
-                //var replystring = string.Empty;
-                //if (activity.Text.ToLower().Contains("c#"))
-                //{
-                //    replystring = Class1.GetCSharpString();
-                //}
-                //else
-                //{
-                //    try
-                //    {
-                //        replystring = Class2.GetDBLString();
-                //    }
-                //    catch (Exception e)
-                //    {
-                //        replystring = "Oh no! There's a problem with Synergy! " + e.Message;
-                //    }
-                //}
+                var replystring = string.Empty;
+                if (activity.Text.ToLower().Contains("c#"))
+                {
+                    replystring = Class1.GetCSharpString();
+                }
+                else
+                {
+                    //try
+                    //{
+                    //    replystring = Class2.GetDBLString();
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //    replystring = "Oh no! There's a problem with Synergy! " + e.Message;
+                    //}
+                }
 
-                //reply = activity.CreateReply(replystring);
-                //await connector.Conversations.ReplyToActivityAsync(reply);
+                reply = activity.CreateReply(replystring);
+                await connector.Conversations.ReplyToActivityAsync(reply);
             }
             else
             {
