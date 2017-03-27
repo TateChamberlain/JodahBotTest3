@@ -137,7 +137,7 @@ namespace ClassLibraryDBL
 			endparams
 		proc
 			data message, @IMessageActivity, await argument
-			await context.PostAsync("You sent: '" + message.Text.ToString() + "'")
+			await context.PostAsync("DBLDialog: '" + message.Text.ToString() + "'")
 			data replystring = string.Empty
 			try
 			begin
