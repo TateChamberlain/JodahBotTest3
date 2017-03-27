@@ -101,7 +101,8 @@ namespace BotApplication0
                     try
                     {
                         //replystring = Class2.GetDBLLog();
-                        replystring = Class2.GetDBLString();
+                        //replystring = Class2.GetDBLString();
+                        replystring = Class2.GetAnotherDBLString();
                     }
                     catch (Exception e)
                     {
