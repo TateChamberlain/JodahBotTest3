@@ -27,9 +27,28 @@ namespace ClassLibraryDBL
 			open(filech,"I:I","DAT:PRESENTERS.ISM")
 			reads(filech,pres_rec)
 			close filech
-			returnvalue = "There is a presenter named " + %atrim(pres_rec.firstname) + " " + %atrim(pres_rec.lastname) + "."
+			returnvalue = "Did you know that there is a presenter named " + %atrim(pres_rec.firstname) + " " + %atrim(pres_rec.lastname) + "."
 
 			;throw new FileInUseException()
+			mreturn %atrim(returnvalue)
+		endmethod
+
+		public static method GetDBLLog,	string
+			endparams
+			record
+				returnvalue	,a100
+				dat_post	,a100
+				dat_len		,i4
+		proc
+			getlog("DAT",dat_post,dat_len)
+			returnvalue = "The value of DAT is " + %atrim(dat_post)
+			if (dat_len == 0)
+			begin
+				setlog("DAT","D:\home\site\wwwroot\Data",dat_len)
+				getlog("DAT",dat_post,dat_len)
+				returnvalue = "The value of DAT is now " + %atrim(dat_post)
+			end
+			
 			mreturn %atrim(returnvalue)
 		endmethod
 
@@ -53,7 +72,7 @@ namespace ClassLibraryDBL
 				nop
 			end
 
-			returnvalue = %atrim(pres_rec.firstname) + " is leading an event called " + %atrim(event_rec.name)
+			returnvalue = %atrim(pres_rec.firstname) + " is leading an event called '" + %atrim(event_rec.name) + "'"
 			mreturn %atrim(returnvalue)
 		endmethod
 

@@ -89,7 +89,7 @@ namespace BotApplication0
                 // return our reply to the user
                 //Activity reply = activity.CreateReply("Hello! You sent '" + activity.Text + "'.");
                 //await connector.Conversations.ReplyToActivityAsync(reply);
-                await context.PostAsync("Hello! You sent '" + message.Text + "'.");
+                await context.PostAsync("Hello from a dialog! You sent '" + message.Text + "'.");
 
                 var replystring = string.Empty;
                 if (message.Text.ToLower().Contains("c#"))
@@ -100,23 +100,26 @@ namespace BotApplication0
                 {
                     try
                     {
-                        Random rand = new Random();
-                        if (rand.Next(2) == 1)
-                        {
-                            replystring = Class2.GetDBLString();
-                        }
-                        else
-                        {
-                            replystring = Class2.GetAnotherDBLString();
-                        }
+                        //replystring = Class2.GetDBLLog();
+                        replystring = Class2.GetDBLString();
                     }
                     catch (Exception e)
                     {
-                        replystring = "Oh no! There's a problem with Synergy! " + e.Message;
+                        replystring = "Oh no! There's a problem with Synergy! " + e.Message + " / " + e.StackTrace;
                     }
                 }
 
                 await context.PostAsync(replystring);
+
+                //try
+                //{
+                //    replystring = Class2.GetDBLString();
+                //}
+                //catch (Exception e)
+                //{
+                //    replystring = "Oh no! There's a problem with Synergy! " + e.Message + " / " + e.StackTrace;
+                //}
+                //await context.PostAsync(replystring);
 
                 // Make sure to receive the next message
                 context.Wait(MessageReceivedAsync);
