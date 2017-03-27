@@ -1,6 +1,8 @@
 import System
+import System.Collections
 import System.Collections.Generic
 import System.Text
+import Synergex.SynergyDE.Select
 import ClassLibraryDBL
 
 namespace ClassLibraryDBL
@@ -25,10 +27,93 @@ namespace ClassLibraryDBL
 			open(filech,"I:I","DAT:PRESENTERS.ISM")
 			reads(filech,pres_rec)
 			close filech
-			returnvalue = "There is a presented named " + %atrim(pres_rec.firstname) + %atrim(pres_rec.lastname)
+			returnvalue = "There is a presenter named " + %atrim(pres_rec.firstname) + " " + %atrim(pres_rec.lastname) + "."
+
 			;throw new FileInUseException()
 			mreturn %atrim(returnvalue)
-		end
+		endmethod
+
+		public static method GetAnotherDBLString, string
+			endparams
+			record
+				returnvalue	,a100
+				pres_rec	,pres_struct
+				event_rec	,event_struct
+				filech		,i4
+				arraylist	,@ArrayList
+		proc
+
+			open(filech,"I:I","DAT:PRESENTERS.ISM")
+			reads(filech,pres_rec)
+			close filech
+
+			arraylist = getEventByPresenterID(pres_rec.PRESENTERID)
+			foreach event_rec in arraylist
+			begin
+				nop
+			end
+
+			returnvalue = %atrim(pres_rec.firstname) + " is leading an event called " + %atrim(event_rec.name)
+			mreturn %atrim(returnvalue)
+		endmethod
+
+
+		public static method getEventByPresenterID, @System.Collections.ArrayList
+			pres_id,	i4
+			endparams
+			record
+				arraylist, @System.Collections.ArrayList
+				event_arraylist, @System.Collections.ArrayList
+			endrecord
+		proc
+			arraylist = new System.Collections.ArrayList()
+			data event_rec, event_struct
+			data junc_rec, junc_struct
+			data fobj, @from, new from("DAT:Events.ism",event_rec)
+			;;event_arraylist = getPresenterIDByEventID(pres_id)
+			event_arraylist = getEventIDByPresenterID(pres_id)
+			foreach junc_rec in event_arraylist
+			begin
+				data sobj, @Select, new select(fobj, (where)junc_rec.EVENTID .eq. event_rec.EVENTID)
+				foreach event_rec in sobj
+					arraylist.add(event_rec)
+			end
+			mreturn arraylist
+		endmethod
+
+
+		public static method getEventIDByPresenterID, @System.Collections.ArrayList
+			pres_id,	i4
+			endparams
+			record
+				arraylist, @System.Collections.ArrayList
+			endrecord
+		proc
+			data junc_rec, junc_struct
+			data fobj, @FROM, new from("DAT:Junction.ism",junc_rec)
+			data sobj, @Select, new select(fobj, (where)pres_id .eq. junc_rec.PRESENTERID)
+			arraylist = new system.collections.arraylist()
+			foreach junc_rec in sobj
+				arraylist.add(junc_rec)
+			mreturn arraylist
+		endmethod
+
+
+		public static method getPresenterIDByEventID, @System.Collections.ArrayList
+			event_id,	i4
+			endparams
+			record
+				arraylist, @System.Collections.ArrayList
+			endrecord
+		proc
+			arraylist = new system.collections.arraylist()
+			data junc_rec, junc_struct
+			data fobj, @FROM, new from("DAT:Junction.ism",junc_rec)
+			data sobj, @Select, new select(fobj, (where)event_id .eq. junc_rec.EVENTID)
+			foreach junc_rec in sobj
+				arraylist.add(junc_rec)
+			mreturn arraylist
+		endmethod
     
     endclass
 

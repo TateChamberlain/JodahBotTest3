@@ -40,7 +40,16 @@ namespace BotApplication0
                 {
                     try
                     {
-                        replystring = Class2.GetDBLString();
+                        //Random rand = new Random();
+                        //if (rand.Next(2) == 1)
+                        //{
+                        //    replystring = Class2.GetDBLString();
+                        //}
+                        //else
+                        //{
+                        //    replystring = Class2.GetAnotherDBLString();
+                        //}
+                        replystring = Class2.GetAnotherDBLString();
                     }
                     catch (Exception e)
                     {
