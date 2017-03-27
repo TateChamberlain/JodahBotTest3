@@ -2,6 +2,9 @@ import System
 import System.Collections
 import System.Collections.Generic
 import System.Text
+import System.Threading.Tasks
+import Microsoft.Bot.Builder.Dialogs;
+import Microsoft.Bot.Connector;
 import Synergex.SynergyDE.Select
 import ClassLibraryDBL
 
@@ -116,5 +119,51 @@ namespace ClassLibraryDBL
 		endmethod
     
     endclass
+
+	
+	{Serializable}
+	public partial class DBLDialog implements IDialog
+
+		public async method StartAsync, @Task
+			context, @IDialogContext 
+			endparams
+		proc
+			context.Wait(MessageReceivedAsync)
+		endmethod
+
+		public async method MessageReceivedAsync, @Task
+			context, @IDialogContext 
+			argument, @IAwaitable<IMessageActivity> 
+			endparams
+		proc
+			data message, @IMessageActivity, await argument
+			await context.PostAsync("You sent: '" + message.Text.ToString() + "'")
+			data replystring = string.Empty
+			try
+			begin
+				data rand, @Random, new Random()
+				if (rand.Next(2) == 1) then
+				begin
+					replystring = Class2.GetDBLString()
+				end
+				else
+				begin
+					replystring = Class2.GetAnotherDBLString()
+				end
+			end
+			catch (e, @Exception)
+			begin
+				replystring = "Uh-oh! There's a problem with Synergy! " + e.Message + " / " + e.StackTrace + " / " + e.InnerException.Message
+			end
+			endtry
+
+			await context.PostAsync(replystring)
+
+			;;  Make sure to receive the next message
+			context.Wait(MessageReceivedAsync)
+		endmethod
+	endclass
+
+
 
 endnamespace
