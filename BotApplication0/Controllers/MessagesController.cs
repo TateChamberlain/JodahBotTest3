@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using Newtonsoft.Json;
 using ClassLibraryCS;
@@ -23,42 +24,42 @@ namespace BotApplication0
         {
             if (activity.Type == ActivityTypes.Message)
             {
-                ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
-                // calculate something for us to return
-                int length = (activity.Text ?? string.Empty).Length;
+                //ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                //// calculate something for us to return
+                //int length = (activity.Text ?? string.Empty).Length;
 
-                // return our reply to the user
-                Activity reply = activity.CreateReply("Hello! You sent '" + activity.Text + "'.");
-                await connector.Conversations.ReplyToActivityAsync(reply);
+                //// return our reply to the user
+                //Activity reply = activity.CreateReply("Hello! You sent '" + activity.Text + "'.");
+                //await connector.Conversations.ReplyToActivityAsync(reply);
 
-                var replystring = string.Empty;
-                if (activity.Text.ToLower().Contains("c#"))
-                {
-                    replystring = Class1.GetCSharpString();
-                }
-                else
-                {
-                    try
-                    {
-                        //Random rand = new Random();
-                        //if (rand.Next(2) == 1)
-                        //{
-                        //    replystring = Class2.GetDBLString();
-                        //}
-                        //else
-                        //{
-                        //    replystring = Class2.GetAnotherDBLString();
-                        //}
-                        replystring = Class2.GetAnotherDBLString();
-                    }
-                    catch (Exception e)
-                    {
-                        replystring = "Oh no! There's a problem with Synergy! " + e.Message;
-                    }
-                }
+                //var replystring = string.Empty;
+                //if (activity.Text.ToLower().Contains("c#"))
+                //{
+                //    replystring = Class1.GetCSharpString();
+                //}
+                //else
+                //{
+                //    try
+                //    {
+                //        Random rand = new Random();
+                //        if (rand.Next(2) == 1)
+                //        {
+                //            replystring = Class2.GetDBLString();
+                //        }
+                //        else
+                //        {
+                //            replystring = Class2.GetAnotherDBLString();
+                //        }
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        replystring = "Oh no! There's a problem with Synergy! " + e.Message;
+                //    }
+                //}
 
-                reply = activity.CreateReply(replystring);
-                await connector.Conversations.ReplyToActivityAsync(reply);
+                //reply = activity.CreateReply(replystring);
+                //await connector.Conversations.ReplyToActivityAsync(reply);
+                await Conversation.SendAsync(activity, () => new CSDialog());
             }
             else
             {
@@ -66,6 +67,61 @@ namespace BotApplication0
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
+        }
+
+        [Serializable]
+        public partial class CSDialog : IDialog
+        {
+
+            public async Task StartAsync(IDialogContext context)
+            {
+                context.Wait(MessageReceivedAsync);
+            }
+
+            public async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> argument)
+            {
+                IMessageActivity message = await argument;
+
+                //ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                //// calculate something for us to return
+                //int length = (activity.Text ?? string.Empty).Length;
+
+                // return our reply to the user
+                //Activity reply = activity.CreateReply("Hello! You sent '" + activity.Text + "'.");
+                //await connector.Conversations.ReplyToActivityAsync(reply);
+                await context.PostAsync("Hello! You sent '" + message.Text + "'.");
+
+                var replystring = string.Empty;
+                if (message.Text.ToLower().Contains("c#"))
+                {
+                    replystring = Class1.GetCSharpString();
+                }
+                else
+                {
+                    try
+                    {
+                        Random rand = new Random();
+                        if (rand.Next(2) == 1)
+                        {
+                            replystring = Class2.GetDBLString();
+                        }
+                        else
+                        {
+                            replystring = Class2.GetAnotherDBLString();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        replystring = "Oh no! There's a problem with Synergy! " + e.Message;
+                    }
+                }
+
+                await context.PostAsync(replystring);
+
+                // Make sure to receive the next message
+                context.Wait(MessageReceivedAsync);
+            }
+
         }
 
         private Activity HandleSystemMessage(Activity message)
