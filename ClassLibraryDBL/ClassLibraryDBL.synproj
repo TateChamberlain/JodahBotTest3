@@ -18,6 +18,20 @@
     <Language>Synergy</Language>
     <DBL_unQulRecStm>Stack</DBL_unQulRecStm>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+    <DBL_qAltif>False</DBL_qAltif>
+    <DBL_qErrWarn>False</DBL_qErrWarn>
+    <DBL_qDisWarnOpt />
+    <DBL_qVariantOpt />
+    <DBL_StackSize />
+    <DBL_device>False</DBL_device>
+    <DBL_mono>False</DBL_mono>
+    <DBL_qWarnStackSize>False</DBL_qWarnStackSize>
+    <DBL_qWarnStackSizeValue>65536</DBL_qWarnStackSizeValue>
+    <DBL_qDefineOptCheck>False</DBL_qDefineOptCheck>
+    <DBL_qDefineOpt />
+    <DBL_qRelaxedAllowDup>False</DBL_qRelaxedAllowDup>
+    <DBL_qRelaxedParamst>False</DBL_qRelaxedParamst>
+    <OtherOptions />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -152,10 +166,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class2.dbl" />
+    <Compile Include="DeviceLicensing\LicenseClass.dbl" />
     <Compile Include="Properties\AssemblyInfo.dbl" />
     <Compile Include="SynergyEnvironment.dbl" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="DeviceLicensing" />
     <Folder Include="Properties" />
   </ItemGroup>
   <ItemGroup>
