@@ -167,6 +167,7 @@
   <ItemGroup>
     <Compile Include="Class2.dbl" />
     <Compile Include="DeviceLicensing\LicenseClass.dbl" />
+    <Compile Include="NewMessageDialog.dbl" />
     <Compile Include="Properties\AssemblyInfo.dbl" />
     <Compile Include="SynergyEnvironment.dbl" />
   </ItemGroup>

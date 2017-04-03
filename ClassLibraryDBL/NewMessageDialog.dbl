@@ -1,0 +1,170 @@
+import System
+import System.Collections.Generic
+import System.Text
+import System.Text.RegularExpressions
+import System.Threading.Tasks
+import Microsoft.Bot.Builder.Dialogs;
+import Microsoft.Bot.Connector;
+
+namespace ClassLibraryDBL
+
+	{Serializable}
+	public class NewMessageDialog implements IDialog
+	
+		protected isExistingConversation, boolean,	false
+
+
+		public async method StartAsync, @Task
+			context, @IDialogContext 
+			endparams
+		proc
+			context.Wait(MessageReceivedAsync)
+		endmethod
+
+		public async method MessageReceivedAsync, @Task
+			context, @IDialogContext 
+			argument, @IAwaitable<IMessageActivity> 
+			endparams
+
+		proc
+			data message, @IMessageActivity, await argument
+			data isMessageRelevant, boolean,	true
+
+;			try
+;			begin
+;				data filch	,i4	,0
+;				open(filch,"a","message.log")
+;				writes(filch, "From: " + message.From.Id + 
+;					&	" (" + message.From.Name + ")" +
+;					&	"   To: " + message.Recipient.Id + 
+;					&	" (" + message.Recipient.Name + ")" +
+;					&	"   Channel: " + message.ChannelId +
+;					&	"   Convers.: " + message.Conversation.Id + 
+;					&	" " + message.Conversation.IsGroup +
+;					&	"   Message: " + message.Text)
+;				close filch
+;			end
+;			catch (e, @Exception)
+;			begin
+;				nop
+;			end
+;			endtry
+
+			;ignore this message if this is a new group conversation that doesn't mention JodahBot,
+			;otherwise, assume that it is relevant
+			if (isExistingConversation == false &&
+				&	message.Conversation.IsGroup == true &&
+				&	Regex.IsMatch(message.text,"jodahbot",RegexOptions.IgnoreCase) == false)
+			begin
+				isMessageRelevant = false
+			end
+
+			if (isExistingConversation)
+			begin
+				if (Regex.IsMatch(message.text,"reset",RegexOptions.IgnoreCase) ||
+					&	Regex.IsMatch(message.text,"bye",RegexOptions.IgnoreCase) ||
+					&	Regex.IsMatch(message.text,"that'*s *all",RegexOptions.IgnoreCase))
+				begin
+					await ResetAsync(context,argument)
+					isMessageRelevant = false
+				end
+			end
+			
+			if (isMessageRelevant)
+			begin
+				data replystring = string.empty
+
+				if (message.ChannelId == "slack") then replystring += "Hello " + message.From.Name + "! "
+				else replystring += "Hello! "
+
+				if isExistingConversation then replystring += "This is an existing "
+				else replystring += "This is a new "
+				isExistingConversation = true
+
+				if (message.Conversation.IsGroup) then replystring += "group "
+				else replystring += "peer-to-peer "
+
+				replystring += "conversation. "
+
+				replystring += "You said '" + message.text + "' "
+
+				await context.PostAsync(replystring)
+				
+;				await Conversation.SendAsync(message, lambda() {new Dialog2()})
+			end
+
+			if (Regex.IsMatch(message.text,"jodahbot",RegexOptions.IgnoreCase))
+			begin
+
+				await context.PostAsync("Hey, you said my name!")
+			end
+
+			context.Wait(MessageReceivedAsync)
+		endmethod	;MessagheReceivedAsync
+
+		;reset all data for the current conversation
+		public async method ResetAsync, @Task
+			context, @IDialogContext 
+			argument, @IAwaitable<IMessageActivity> 
+			endparams
+		proc
+			isExistingConversation = false
+			data message, @IMessageActivity, await argument
+
+			data replystring = string.empty
+			if (message.Conversation.IsGroup) then replystring = "Ending the conversation for now. Mention JodahBot to talk to me again."
+			else replystring = "Ending the conversation for now. Feel free to talk to me again."
+
+			await context.PostAsync(replystring)
+			mreturn
+		endmethod	;ResetAsync
+
+	endclass
+
+	{Serializable}
+	public class Dialog2 implements IDialog
+	
+		protected isExistingConversation, boolean,	false
+
+
+		public async method StartAsync, @Task
+			context, @IDialogContext 
+			endparams
+		proc
+			context.Wait(MessageReceivedAsync)
+		endmethod
+
+		public async method MessageReceivedAsync, @Task
+			context, @IDialogContext 
+			argument, @IAwaitable<IMessageActivity> 
+			endparams
+		proc
+			data message, @IMessageActivity, await argument
+
+			data replystring = string.empty
+
+			if (message.ChannelId == "slack") then replystring += "Hello " + message.From.Name + "! "
+			else replystring += "Hello! "
+
+			replystring += "Reply from Dialog2. "
+
+			if isExistingConversation then replystring += "This is an existing "
+			else replystring += "This is a new "
+			isExistingConversation = true
+
+			if (message.Conversation.IsGroup) then replystring += "group "
+			else replystring += "peer-to-peer "
+
+			replystring += "conversation. "
+
+			replystring += "You said '" + message.text + "' "
+
+			await context.PostAsync(replystring)
+
+			context.Wait(MessageReceivedAsync)
+		endmethod	;MessageReceivedAsync
+
+
+	endclass
+
+endnamespace
